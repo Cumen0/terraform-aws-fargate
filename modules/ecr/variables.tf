@@ -1,14 +1,5 @@
-variable "rep_name" {
+variable "ecr_repository_name" {
   description = "The name of the ECR repository"
   type        = string
 }
 
-variable "tags" {
-  description = "A map of tags to assign to the ECR repository"
-  type        = map(string)
-  default     = {
-    Project     = "aws-wsc-infra"
-    Environment = "staging"
-    Owner       = "team-infra"  
-  }
-}
