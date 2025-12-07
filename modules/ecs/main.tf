@@ -72,8 +72,8 @@ resource "aws_security_group" "ecs_tasks_sg" {
 
   ingress {
     protocol        = "tcp"
-    from_port       = 80
-    to_port         = 80
+    from_port       = 5000
+    to_port         = 5000
     security_groups = [var.alb_security_group_id]
   }
 
@@ -111,10 +111,22 @@ resource "aws_ecs_task_definition" "main" {
       essential = true
       portMappings = [
         {
-          containerPort = 80
-          hostPort      = 80
+          containerPort = 5000
+          hostPort      = 5000
         }
+
       ]
+      environment = [
+        {
+          name  = "DYNAMODB_TABLE"
+          value = "${var.project_name}-${var.env}-table"
+        },
+        {
+          name  = "AWS_DEFAULT_REGION"
+          value = var.aws_region
+        }
+      ],
+
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -144,7 +156,7 @@ resource "aws_ecs_service" "main" {
   load_balancer {
     target_group_arn = var.target_group_arn
     container_name   = "${var.project_name}-container"
-    container_port   = 80
+    container_port   = 5000
   }
 
   depends_on = [aws_iam_role_policy_attachment.ecs_execution_role_policy]
