@@ -167,7 +167,7 @@ aws configure
 # Or use environment variables:
 export AWS_ACCESS_KEY_ID=your-access-key
 export AWS_SECRET_ACCESS_KEY=your-secret-key
-export AWS_DEFAULT_REGION=us-east-1
+export AWS_DEFAULT_REGION=your-region
 ```
 
 ### 3. Set Up Terraform Backend
@@ -191,20 +191,20 @@ aws dynamodb create-table \
 Create `aws-ecs-infra/env/staging/terraform.tfvars`:
 
 ```hcl
-aws_region = "us-east-1"
+aws_region = "___"
 default_tags = {
-  Owner        = "Your Name"
-  Project_Name = "aws-ecs-infra"
-  Made_By      = "Terraform"
+  Owner        = "___"
+  Project_Name = "___"
+  Made_By      = "___"
 }
-project_name = "aws-ecs-infra"
-env          = "staging"
-vpc_cidr             = "10.0.0.0/16"
-public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
-private_subnet_cidrs = ["10.0.3.0/24", "10.0.4.0/24"]
-terraform_state_bucket = "your-terraform-state-bucket"
-locks_table = "terraform-locks"
-domain_name = "volodymyr-diadechko.online"
+project_name = "___"
+env          = "___"
+vpc_cidr             = "___"
+public_subnet_cidrs  = ["___", "___"]
+private_subnet_cidrs = ["___", "___"]
+terraform_state_bucket = "___"
+locks_table = "___"
+domain_name = "___"
 ```
 
 ## 🏭 Infrastructure Deployment
@@ -240,7 +240,6 @@ domain_name = "volodymyr-diadechko.online"
 ```bash
 terraform destroy
 ```
-
 ⚠️ **Warning**: This will delete all resources. Use with caution!
 
 ## 💻 Application Development
@@ -258,7 +257,7 @@ terraform destroy
 
    ```bash
    export DYNAMODB_TABLE=your-table-name
-   export AWS_DEFAULT_REGION=us-east-1
+   export AWS_DEFAULT_REGION=your-region
    ```
 
 3. **Run the application**:
@@ -290,7 +289,7 @@ services:
       - "80:5000"
     environment:
       - DYNAMODB_TABLE=local-todo-table
-      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_DEFAULT_REGION=your-region
     volumes:
       - ~/.aws:/root/.aws:ro
 ```
@@ -309,7 +308,7 @@ The project includes a comprehensive GitHub Actions workflow that:
 
 ### Setting Up GitHub Secrets
 
-Configure the following secrets in GitHub (Settings → Secrets and variables → Actions):
+Configure the following secrets in GitHub:
 
 - `AWS_ACCESS_KEY_ID`: Your AWS access key
 - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
@@ -335,7 +334,7 @@ The application uses the following environment variables:
 | Variable             | Description         | Default          |
 | -------------------- | ------------------- | ---------------- |
 | `DYNAMODB_TABLE`     | DynamoDB table name | `todo-table-dev` |
-| `AWS_DEFAULT_REGION` | AWS region          | `us-east-1`      |
+| `AWS_DEFAULT_REGION` | AWS region          | `your-region`    |
 
 ### DynamoDB Table Schema
 
@@ -372,11 +371,11 @@ The application is configured to use a custom domain with HTTPS:
 3. **Update Terraform Variables**:
 
    ```hcl
-   domain_name = "your-domain.com"
+   domain_name = "your-domain"
    ```
 
 4. **Verify HTTPS**:
-   - After deployment, access your application via `https://your-domain.com`
+   - After deployment, access your application via `https://your-domain`
    - The ALB automatically redirects HTTP to HTTPS
 
 ### Terraform Variables
