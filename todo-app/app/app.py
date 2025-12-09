@@ -9,10 +9,11 @@ app = Flask(__name__)
 
 # Initialize DynamoDB resource
 # Authentication is handled via IAM Task Role
-dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+aws_region = os.environ.get('AWS_DEFAULT_REGION', 'us-east-1')
+dynamodb = boto3.resource('dynamodb', region_name=aws_region)
 
-# Get table name from environment variable
-TABLE_NAME = os.environ.get('DYNAMODB_TABLE', 'todo-table-dev')
+# Get table name from environment variable (default matches Terraform table name)
+TABLE_NAME = os.environ.get('DYNAMODB_TABLE', 'aws-ecs-infra-staging-table')
 table = dynamodb.Table(TABLE_NAME)
 
 
@@ -59,7 +60,9 @@ def add_task():
 
         return redirect(url_for('index'))
     except ClientError as e:
-        app.logger.error(f"Error adding task to DynamoDB: {e}")
+        # Log the AWS error code for easier debugging (e.g., ResourceNotFoundException)
+        error_code = getattr(e, 'response', {}).get('Error', {}).get('Code', 'Unknown')
+        app.logger.error(f"Error adding task to DynamoDB (code={error_code}): {e}")
         return jsonify({'error': 'Failed to add task'}), 500
     except Exception as e:
         app.logger.error(f"Unexpected error: {e}")
