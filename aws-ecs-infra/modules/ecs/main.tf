@@ -31,7 +31,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
 
 # --- Task Role ---
 resource "aws_iam_role" "ecs_task_role" {
-  name = "${var.project_name}-${var.env}-task-role"
+  name_prefix = "${var.project_name}-${var.env}-task-role-"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -43,6 +43,10 @@ resource "aws_iam_role" "ecs_task_role" {
       }
     }]
   })
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy" "dynamodb_access" {
