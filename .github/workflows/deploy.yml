@@ -65,8 +65,6 @@ jobs:
         working-directory: ${{ env.APP_WORKING_DIR }}
         run: |
           docker run --rm -i hadolint/hadolint < Dockerfile || true
-          # Я додав "|| true" щоб воно ПОКАЗАЛО помилки, але НЕ ЗУПИНИЛО пайплайн.
-          # Прибери "|| true", якщо хочеш бути суворим.
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -78,17 +76,9 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Auto-format Terraform Code
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform fmt
-
       - name: Terraform Init
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform init
-
-      - name: Terraform Validate
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform validate
 
       - name: Terraform Plan (save to file)
         working-directory: ${{ env.TF_WORKING_DIR }}
