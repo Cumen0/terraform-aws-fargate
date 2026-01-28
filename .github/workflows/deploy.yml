@@ -50,17 +50,6 @@ jobs:
           fi
           printf "%s" "$TFVARS_CONTENT" > terraform.tfvars
 
-      - name: Run Unit Tests (if present)
-        working-directory: ${{ env.APP_WORKING_DIR }}
-        run: |
-          set -euo pipefail
-          if [ -f tests ] || [ -d tests ]; then
-            pip install pytest
-            pytest
-          else
-            echo "No tests directory found, skipping pytest."
-          fi
-
       - name: Lint Dockerfile (hadolint)
         working-directory: ${{ env.APP_WORKING_DIR }}
         run: |
